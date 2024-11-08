@@ -125,7 +125,7 @@ From the `frontend` directory, run:
 num run dev
 ```
 
-This will start the frontend development server on `http://localhost:5173/`.
+This will start the frontend development server. The app will be running on `http://localhost:5173/`.
 
 ---
 
