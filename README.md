@@ -12,7 +12,7 @@
 - [Running the Application](#running-the-application)
   - [Starting the Backend Server](#starting-the-backend-server)
   - [Starting the Frontend Server](#starting-the-frontend-server)
-- [API Endpoints](#api-endpoints)
+- [Starting with Docker](#starting-with-docker)
 - [Contact Information](#contact-information)
 
 ---
