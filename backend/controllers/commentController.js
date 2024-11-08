@@ -2,6 +2,8 @@ const Comment = require("../models/Comment");
 
 // Create a new comment on a post or create a reply to an existing comment
 exports.createComment = async (req, res) => {
+  console.log('this is create comment controller.. ');
+  // console.log(req.body);
   try {
     const { text, parentComment } = req.body;
     const { postId } = req.params;
@@ -23,33 +25,53 @@ exports.createComment = async (req, res) => {
   }
 };
 
-// Fetch all top-level comments and their nested replies for a given post
+// Fetch all comments for a post and build a nested comment tree
 exports.getCommentsByPost = async (req, res) => {
+  console.log('this is getCommentsByPost controller');
+
   try {
     const { postId } = req.params;
 
-    // Find all top-level comments for the specified post
-    const comments = await Comment.find({
-      post: postId,
-      parentComment: null, // Only retrieve top-level comments
-    })
-      .populate("user", ["username"]) // Populate username of the user who made each comment
-      .populate({
-        path: "replies", // Populate nested replies
-        populate: {
-          path: "user", // Populate the username for each reply author
-          select: "username",
-        },
-      });
+    // Fetch all comments for the specified post
+    const comments = await Comment.find({ post: postId })
+      .populate("user", ["username"])
+      .lean(); // Use .lean() to get plain JavaScript objects
 
-    res.status(200).json(comments);
+    // Build a map of comments by _id
+    const commentsById = {};
+    comments.forEach(comment => {
+      comment.replies = [];
+      commentsById[comment._id.toString()] = comment;
+    });
+
+    // Build the comment tree
+    const topLevelComments = [];
+    comments.forEach(comment => {
+      if (comment.parentComment) {
+        // This comment is a reply
+        const parentCommentId = comment.parentComment.toString();
+        const parentComment = commentsById[parentCommentId];
+        if (parentComment) {
+          parentComment.replies.push(comment);
+        }
+      } else {
+        // This is a top-level comment
+        topLevelComments.push(comment);
+      }
+    });
+
+    res.status(200).json(topLevelComments);
   } catch (err) {
+    console.error(err);
     res.status(500).send("Server Error");
   }
 };
 
+
 // Add a like to a specific comment
 exports.likeComment = async (req, res) => {
+  console.log('this is likeComment Controller');
+
   try {
     const { commentId } = req.params;
 
@@ -74,6 +96,8 @@ exports.likeComment = async (req, res) => {
 
 // Remove a like from a specific comment
 exports.unlikeComment = async (req, res) => {
+  console.log('this is unlikecomment controller');
+
   try {
     const { commentId } = req.params;
 
@@ -100,6 +124,8 @@ exports.unlikeComment = async (req, res) => {
 
 // Retrieve a single comment and its replies ie nested comments if any
 exports.getCommentById = async (req, res) => {
+  console.log('this is getCommentById controller');
+
   try {
     const { commentId } = req.params;
 

@@ -2,8 +2,11 @@ const jwt = require("jsonwebtoken");
 
 // authenticate the user
 const authMiddleware = (req, res, next) => {
+  console.log('This is authMiddleware controller');
   // get the JWT token from the 'access_token' cookie,
   const token = req.cookies.access_token;
+
+  // console.log('this is authMiddleware and token is :',token);
 
   // Check if no token
   if (!token) {

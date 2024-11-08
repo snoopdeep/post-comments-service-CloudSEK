@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cookieParser=require('cookie-parser');
+const cors = require('cors');
 
 // import routes
 const authRoutes = require('./routes/auth');
@@ -21,6 +22,13 @@ app.use(express.json());
 
 // cookie-parser middleware
 app.use(cookieParser());
+
+// cors
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Update this to match your frontend URL
+    credentials: true,
+  }));
 
 // use Routes
 app.use('/api/auth', authRoutes);

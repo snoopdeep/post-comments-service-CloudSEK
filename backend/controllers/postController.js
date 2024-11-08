@@ -3,6 +3,7 @@ const Comment = require('../models/Comment');
 
 // Create a new post
 exports.createPost = async (req, res) => {
+  console.log('this is create post controller');
   try {
     const { content, title } = req.body;
     // check for content
@@ -24,7 +25,7 @@ exports.createPost = async (req, res) => {
 
 // Get all posts with top-level comments
 exports.getPosts = async (req, res) => {
-
+  console.log('This is getPosts controller');
   try {
     const posts = await Post.find()
       .populate('user', ['username'])
@@ -44,6 +45,7 @@ exports.getPosts = async (req, res) => {
 
 // Get a single post with its  comments
 exports.getPostById = async (req, res) => {
+  console.log('This is getPostById controller');
   try {
     const post = await Post.findById(req.params.id)
       .populate('user', ['username'])
@@ -65,6 +67,7 @@ exports.getPostById = async (req, res) => {
 
 // Like a post 
 exports.likePost = async (req, res) => {
+  console.log('This is likePost controller');
   try {
     const post = await Post.findById(req.params.id);
 
@@ -84,6 +87,8 @@ exports.likePost = async (req, res) => {
 
 // Unlike a post
 exports.unlikePost = async (req, res) => {
+  console.log('This is unlikePost controller');
+
   try {
     const post = await Post.findById(req.params.id);
 
