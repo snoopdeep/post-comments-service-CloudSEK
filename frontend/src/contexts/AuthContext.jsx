@@ -16,7 +16,6 @@ export function AuthProvider({ children }) {
         { email, password },
         { withCredentials: true }
       );
-
       const { token, user } = response.data;
       setUser(user);
       // Save user to localStorage or state
